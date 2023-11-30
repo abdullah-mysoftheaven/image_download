@@ -7,7 +7,7 @@ import 'package:image_gallery_saver/image_gallery_saver.dart';
 
 class SaveImageFromUrl extends StatelessWidget {
   final String imageUrl =
-      'https://drive.google.com/uc?export=view&id=1qvMo2-XoTWA-VQpicRBMSi9mMJfEsbDc'; // Replace with your image URL
+      'https://drive.google.com/uc?export=view&id=1VxXLQglhtZHR7_xIUToZIXhA10yxRzWf'; // Replace with your image URL
 
   Future<void> saveImageToDeviceGallery() async {
     try {
@@ -57,7 +57,9 @@ class SaveImageFromUrl extends StatelessWidget {
             child:FadeInImage.assetNetwork(
               fit: BoxFit.fill,
               placeholder: Assets.profileAvater,
-              image:"https://drive.google.com/uc?export=view&id=1qvMo2-XoTWA-VQpicRBMSi9mMJfEsbDc",
+              image:"https://drive.google.com/uc?export=view&id=1VxXLQglhtZHR7_xIUToZIXhA10yxRzWf",
+              // image:"https://drive.google.com/uc?export=view&id=1eR3DSNCPmROsKuoHq8ryPGCZTveIar1u",
+              // image:"https://drive.google.com/uc?export=view&id=1qvMo2-XoTWA-VQpicRBMSi9mMJfEsbDc",
               // image:"https://drive.google.com/file/d/1qvMo2-XoTWA-VQpicRBMSi9mMJfEsbDc",
 
               /// https://drive.google.com/uc?export=view&id=YOUR_FILE_ID. this formet will be
