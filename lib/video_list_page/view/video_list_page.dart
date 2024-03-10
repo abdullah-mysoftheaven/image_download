@@ -49,7 +49,7 @@ class VideoListScreenPage extends StatelessWidget {
                   ),
 
                   child:Column(
-                    children: [bodyDesign()],
+                    children: [Expanded(child: bodyDesign())],
                   )
                 )),
               ],
@@ -62,73 +62,130 @@ class VideoListScreenPage extends StatelessWidget {
   }
 
 
-
-
-
-
-
-
-
   ///-----------page body design
   Widget bodyDesign(){
 
     return
-      Expanded(child: Obx(() => ListView.builder(
-        padding: EdgeInsets.all(10),
-        itemCount: pageController.videoList.length, // Number of items in your list
-        itemBuilder: (BuildContext context, int index) {
-          // Function called for each item in the list
-          return Container(
-            padding: EdgeInsets.only(left: 10,right: 10,top: 10,bottom: 10),
-            margin: EdgeInsets.only(top: 10,bottom: 10),
+      Column(
+
+        children: [
+          SizedBox(height: 20,),
+          Row(
+            children: [
+              SizedBox(width: 10,),
+              Expanded(child: InkWell(
+                onTap: (){
+                  pageController.saveServerImageToDeviceGallery("https://img.youtube.com/vi/8GZ__M388Z0/sddefault.jpg");
+                },
+                child: Container(
+                color: Colors.green,
+                padding: EdgeInsets.only(left: 20,right: 20,top: 10,bottom: 10),
+                child: Text("Download",style: TextStyle(
+                    fontSize: 20,
+                    color: Colors.white
+                ),),
+                            ),
+              )),
+              SizedBox(width: 20,),
+              Expanded(child: InkWell(
+                onTap: (){
+
+                  for(int i=0; i<pageController.videoList.length;i++){
 
 
 
-            decoration: BoxDecoration(
-              color: Colors.white,
-            border: Border.all(
-              width: 2,
-              color: Colors.black87
-            ),
-              borderRadius: BorderRadius.circular(10)
-              
-            ),
-            child:Row(
-              children: [
-                Expanded(child: Column(
+                    // pageController.saveServerImageToDeviceGallery("https://img.youtube.com/vi/8GZ__M388Z0/sddefault.jpg");
+                    pageController.saveServerImageToDeviceGallery(pageController.videoList[i].thumbnelImageUrl);
+                  }
+
+
+                },
+                child: Container(
+                color: Colors.green,
+                padding: EdgeInsets.only(left: 20,right: 20,top: 10,bottom: 10),
+                child: Text("Download All",style: TextStyle(
+                    fontSize: 20,
+                    color: Colors.white
+                ),),
+                            ),
+              )),
+              SizedBox(width: 10,),
+            ],
+          ),
+          Expanded(child: Obx(() => ListView.builder(
+            padding: EdgeInsets.all(10),
+            itemCount: pageController.videoList.length, // Number of items in your list
+            itemBuilder: (BuildContext context, int index) {
+              // Function called for each item in the list
+              return Container(
+                padding: EdgeInsets.only(left: 10,right: 10,top: 10,bottom: 10),
+                margin: EdgeInsets.only(top: 10,bottom: 10),
+
+
+
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                border: Border.all(
+                  width: 2,
+                  color: Colors.black87
+                ),
+                  borderRadius: BorderRadius.circular(10)
+
+                ),
+                child:Row(
                   children: [
-                    Row(
-                        children: [
-                          Expanded(child:Text("Title: ${pageController.videoList[index].title}"),)
-                        ]
-                    ),
-                    SizedBox(height: 10,),
 
-                    Row(
-                        children: [
-                          Expanded(child:Text("Author: ${pageController.videoList[index].author}"),)
-                        ]
-                    ),
-                    SizedBox(height: 10,),
+                    Container(
+                      margin: EdgeInsets.only(left: 0,right: 10),
+                      height: 100,
+                      width: 70,
+                      child:ClipRRect(
 
-                    Row(
-                        children: [
-                          Expanded(child:Text("Duration: ${pageController.videoList[index].duration}"),)
-                        ]
+                        child: Image.network(pageController.videoList[index].thumbnelImageUrl,
+                          fit: BoxFit.fill,
+                        ),
+                        borderRadius: BorderRadius.circular(10),
+                      ) ,
                     ),
-                    SizedBox(height: 10,),
-                    Row(
-                        children: [
-                          Expanded(child:Text("Video Url: ${pageController.videoList[index].videoUrl}"),)
-                        ]
-                    ),
+
+                    Expanded(child: Column(
+                      children: [
+                        Row(
+                            children: [
+                              // Expanded(child:Text("Title: ${pageController.videoList[index].title}"),)
+                              Expanded(child:Text(" ${pageController.videoList[index].title}"),)
+                            ]
+                        ),
+                        SizedBox(height: 10,),
+
+                        // Row(
+                        //     children: [
+                        //       Expanded(child:Text("Author: ${pageController.videoList[index].author}"),)
+                        //     ]
+                        // ),
+                        // SizedBox(height: 10,),
+
+                        Row(
+                            children: [
+                              Expanded(child:Text("${pageController.videoList[index].duration}"),)
+                              // Expanded(child:Text("Duration: ${pageController.videoList[index].duration}"),)
+                            ]
+                        ),
+                        SizedBox(height: 10,),
+                        // Row(
+                        //     children: [
+                        //       Expanded(child:Text("Video Url: ${pageController.videoList[index].videoUrl}"),)
+                        //     ]
+                        // ),
+                      ],
+                    ))
                   ],
-                ))
-              ],
-            ),
-          );
-        },
-      )),);
+                ),
+              );
+            },
+          )),),
+        ],
+      );
 
 
 

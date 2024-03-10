@@ -1,14 +1,10 @@
 
 
-
-import 'dart:convert';
-import 'dart:developer';
-import 'dart:io';
-import 'dart:typed_data';
-
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:image_gallery_saver/image_gallery_saver.dart';
 
-import 'package:path/path.dart' as p;
+import 'package:http/http.dart' as http;
 import 'package:youtube_explode_dart/youtube_explode_dart.dart';
 
 import '../../YoutubeVieoListModel.dart';
@@ -36,7 +32,8 @@ class  VideoListPageController extends GetxController {
    var yt = YoutubeExplode();
 
 // Get playlist metadata.
-   var playlist = await yt.playlists.get('PLgH5QX0i9K3p4ckbNCy71LRr_dG0AWGw9');
+   var playlist = await yt.playlists.get('PLjxrf2q8roU1MH1pe5nxdqt8i6zXASE7H');
+   // var playlist = await yt.playlists.get('PLgH5QX0i9K3p4ckbNCy71LRr_dG0AWGw9');
 
    var title = playlist.title;
    var author = playlist.author;
@@ -64,7 +61,8 @@ class  VideoListPageController extends GetxController {
          title: video.title,
          author: video.author,
          duration: video.duration.toString(),
-         videoUrl: 'https://www.youtube.com/watch?v=${video.id}'
+         videoUrl: 'https://www.youtube.com/watch?v=${video.id}',
+         thumbnelImageUrl: "https://img.youtube.com/vi/${video.id}/hqdefault.jpg"
      );
      vdList.add(youTubeVideoListModel);
 
@@ -81,12 +79,60 @@ class  VideoListPageController extends GetxController {
  }
 
 
- String extractVideoId(String url) {
 
+ Future<void> saveAssetImageToDeviceGallery() async {
+   // Specify the path to your asset image
+   String assetImagePath = 'assets/images/profile_avater.jpg';
 
+   try {
+     // Load the asset image as bytes
+     ByteData data = await rootBundle.load(assetImagePath);
+     Uint8List bytes = data.buffer.asUint8List();
 
+     // Save the image to the device gallery using ImageGallerySaver
+     final result = await ImageGallerySaver.saveImage(bytes);
+
+     // Check if the image was saved successfully
+     if (result['isSuccess']) {
+       print('Image saved successfully');
+       print('------$result---------');
+     } else {
+       print('Failed to save image: ${result['errorMessage']}');
+     }
+   } catch (e) {
+     // Print any errors that may occur during the process
+     print('Error: $e');
+   }
  }
 
+ Future<void> saveServerImageToDeviceGallery(String imageUrl) async {
+   try {
+     // Fetch the image from the server
+     http.Response response = await http.get(Uri.parse(imageUrl));
+
+     // Check if the request was successful (status code 200)
+     if (response.statusCode == 200) {
+       // Convert the response body to Uint8List
+       Uint8List bytes = response.bodyBytes;
+
+       // Save the image to the device gallery using ImageGallerySaver
+       final result = await ImageGallerySaver.saveImage(bytes);
+
+       // Check if the image was saved successfully
+       if (result['isSuccess']) {
+         print('Image saved successfully');
+         print('------$result---------');
+       } else {
+         print('Failed to save image: ${result['errorMessage']}');
+       }
+     } else {
+       print('Failed to fetch image. Status code: ${response.statusCode}');
+     }
+   } catch (e) {
+     // Print any errors that may occur during the process
+     print('Error: $e');
+   }
+ }
 
   }
 
