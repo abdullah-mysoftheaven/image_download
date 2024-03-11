@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:image_download/video_list_page/view/video_list_page.dart';
+import 'package:image_download/video_list_page1/view/video_list_page1.dart';
 
 Future<void> main() async {
 
@@ -25,7 +26,7 @@ class MyApp extends StatelessWidget {
 
       debugShowCheckedModeBanner: false,
 
-      home: VideoListScreenPage(),
+      home: VideoListScreenPage1(),
 
 
     );

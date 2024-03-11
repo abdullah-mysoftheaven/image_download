@@ -12,9 +12,45 @@ import '../../YoutubeVieoListModel.dart';
 
 
 
-class  VideoListPageController extends GetxController {
+class  VideoListPageController1 extends GetxController {
 
  var videoList=<YouTubeVideoListModel>[].obs;
+
+
+ Future<void> captureFrame(String videoUrl, Duration captureTime) async {
+   VideoPlayerController _controller = VideoPlayerController.network(videoUrl);
+
+   await _controller.initialize();
+
+   // Set the video controller position to the capture time
+   await _controller.seekTo(captureTime);
+
+   // Create a `VideoPlayer` widget to display the video
+   VideoPlayer videoPlayer = VideoPlayer(_controller);
+
+   // Create a `GlobalKey` to access the rendered video frame
+   GlobalKey videoPlayerKey = GlobalKey();
+
+   // Create a `RepaintBoundary` to capture the rendered frame
+   RepaintBoundary boundary = RepaintBoundary(
+     key: videoPlayerKey,
+     child: videoPlayer,
+   );
+
+   // Create a `RenderRepaintBoundary` and trigger the rendering
+   RenderRepaintBoundary renderRepaintBoundary =
+   videoPlayerKey.currentContext.findRenderObject() as RenderRepaintBoundary;
+   ui.Image image = await renderRepaintBoundary.toImage(pixelRatio: 1.0);
+   ByteData byteData = await image.toByteData(format: ui.ImageByteFormat.png);
+   Uint8List pngBytes = byteData.buffer.asUint8List();
+
+   // Save the captured frame as an image file
+   File imageFile = File('captured_frame.png');
+   await imageFile.writeAsBytes(pngBytes);
+
+   // Dispose of the video controller
+   _controller.dispose();
+ }
 
   @override
   void onInit() {
@@ -26,35 +62,12 @@ class  VideoListPageController extends GetxController {
 
   }
  getPlaylistVideos1( ) async {
-   final String imageUrl =
-       'https://drive.google.com/uc?export=view&id=1VxXLQglhtZHR7_xIUToZIXhA10yxRzWf'; // Replace with your image URL
-   https://www.youtube.com/watch?v=rQYZ3JmZsdI&list=PLgH5QX0i9K3p4ckbNCy71LRr_dG0AWGw9
+
    var yt = YoutubeExplode();
 
-// Get playlist metadata.
-//    var playlist = await yt.playlists.get('PLjxrf2q8roU1MH1pe5nxdqt8i6zXASE7H');
-   var playlist = await yt.playlists.get('PL6VuRyhaYLjUAloWyK5kONp_Hw8FZZ-TA');
-   // var playlist = await yt.playlists.get('PLgH5QX0i9K3p4ckbNCy71LRr_dG0AWGw9');
+   var playlist = await yt.playlists.get('PLjxrf2q8roU3LvrdR8Hv_phLrTj0xmjnD');
 
-   var title = playlist.title;
-   var author = playlist.author;
-
-   await for (var video in yt.playlists.getVideos(playlist.id)) {
-     var videoTitle = video.title;
-     var videoAuthor = video.author;
-   }
-
-   var playlistVideos = await yt.playlists.getVideos(playlist.id);
-
-// Get first 20 playlist videos.
-//    var somePlaylistVideos = await yt.playlists.getVideos(playlist.id).take(20).toList();
    var somePlaylistVideos = await yt.playlists.getVideos(playlist.id).toList();
-
-
-
-   print("ok");
-   // print(playlistVideos);
-
    List<YouTubeVideoListModel> vdList=[];
 
    for (var video in somePlaylistVideos) {
@@ -75,9 +88,8 @@ class  VideoListPageController extends GetxController {
      print('------');
    }
 
-
-
    videoList(vdList);
+
  }
 
 
